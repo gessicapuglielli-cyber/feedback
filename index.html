@@ -660,7 +660,7 @@
   <h2 id="about-h">Gess<span class="surname">Puglielli</span></h2>
   <div class="role">Head of Product Design · MPB</div>
 
-  <img class="portrait" data-src="assets/gess.png" alt="Portrait of Gess Puglielli" />
+  <img class="portrait" src="assets/gess.png" alt="Portrait of Gess Puglielli" />
 
   <p class="lead">Product design leader with 25+ years across editorial, advertising, UX and enterprise. I turn complexity into clarity — building teams, systems, and experiences people trust.</p>
   <p class="body">I head MPB's international design team — rebuilt the platform for global relaunch, scaled the team from 1 to 8 across all disciplines, and embedded design systems, ops and discovery from scratch.</p>
@@ -752,11 +752,6 @@
 </footer>
 
 <script>
-/* Resolve relative asset URLs while preserving any preview-host query token. */
-document.querySelectorAll("[data-src]").forEach((el) => {
-  el.src = el.getAttribute("data-src") + location.search;
-});
-
 /* ─────────────────────────────────────────────────────────────────
    Config — flip these without touching the rest of the page.
    To wire feedback to a real backend later, replace storeFeedback()

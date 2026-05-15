@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#2a4d3a" />
+<title>Gess Puglielli — Head of Product Design</title>
+<meta name="description" content="Personal hub for Gess Puglielli — talks, writing, links, and a quick way to give feedback after a talk." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+  /* ─── tokens ───────────────────────────────────────────────────── */
+  :root {
+    --bg: #f6f4ef;
+    --fg: #0e1411;
+    --muted: #5f6a64;
+    --accent: #2a4d3a;
+    --accent-ink: #f6f4ef;
+    --rule: rgba(14, 20, 17, 0.16);
+    --col: 480px; /* max column width on desktop */
+
+    --display: "Anton", "Archivo Black", "Helvetica Neue", sans-serif;
+    --body: "Manrope", "Helvetica Neue", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  [data-theme="dark"] {
+    --bg: #0e1411;
+    --fg: #f4f1ea;
+    --muted: #9aa49d;
+    --accent: #e7ddc8;
+    --accent-ink: #0e1411;
+    --rule: rgba(244, 241, 234, 0.14);
+  }
+
+  /* ─── reset ────────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+    transition: background 200ms ease, color 200ms ease;
+  }
+  img { display: block; max-width: 100%; }
+  button { font: inherit; color: inherit; }
+  a { color: inherit; }
+
+  /* ─── layout ───────────────────────────────────────────────────── */
+  /* Mobile-first: each block is full-width, content padded to 24px.
+     On desktop: page bg fills viewport; "bleed" sections still go full
+     width but their inner content is constrained and centered. */
+  .col, .bleed > .inner {
+    max-width: var(--col);
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+  .bleed { width: 100%; }
+
+  /* ─── top bar ──────────────────────────────────────────────────── */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    max-width: var(--col);
+    margin: 0 auto;
+  }
+  .live {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.04em;
+  }
+  .live::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+  }
+  .theme-toggle {
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--muted);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-grid;
+    place-items: center;
+    transition: border-color 160ms, color 160ms;
+  }
+  .theme-toggle:hover { color: var(--fg); border-color: var(--fg); }
+  .theme-toggle svg { width: 14px; height: 14px; }
+
+  /* ─── hero ─────────────────────────────────────────────────────── */
+  .hero {
+    background: var(--accent);
+    color: var(--accent-ink);
+    padding-block: 32px 28px;
+  }
+  .hero .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    opacity: 0.7;
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(88px, 22vw, 120px);
+    line-height: 0.82;
+    letter-spacing: -0.02em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+  .hero p.lede {
+    margin: 22px 0 0;
+    padding-top: 14px;
+    border-top: 2px solid var(--accent-ink);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.45;
+    max-width: 320px;
+  }
+
+  /* ─── form ─────────────────────────────────────────────────────── */
+  .form-block {
+    background: var(--accent);
+    color: var(--accent-ink);
+    padding-block: 0 36px;
+  }
+  .field-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    opacity: 0.7;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .talks-pick {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+    margin-bottom: 24px;
+  }
+  .talk-btn {
+    background: transparent;
+    color: var(--accent-ink);
+    border: 2px solid var(--accent-ink);
+    padding: 14px 16px;
+    text-align: left;
+    cursor: pointer;
+    font-family: var(--display);
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    letter-spacing: 0.01em;
+    font-weight: 400;
+    transition: background 160ms ease, color 160ms ease;
+  }
+  .talk-btn:hover { background: rgba(14,20,17,0.06); }
+  .talk-btn[aria-pressed="true"] {
+    background: var(--accent-ink);
+    color: var(--accent);
+  }
+  .talk-btn .title { font-size: 22px; line-height: 1; letter-spacing: 0.01em; }
+  .talk-btn .year { font-family: var(--mono); font-size: 12px; font-weight: 500; }
+
+  .stars {
+    display: inline-flex;
+    gap: 6px;
+  }
+  .star {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    color: rgba(14, 20, 17, 0.2);
+    line-height: 0;
+    transition: transform 120ms ease, color 160ms ease;
+  }
+  .star svg { width: 32px; height: 32px; fill: currentColor; }
+  .star[data-on="true"] { color: var(--accent-ink); }
+  .star:hover { transform: scale(1.12); }
+
+  .form-block .field {
+    border-top: 2px solid var(--accent-ink);
+    padding-top: 18px;
+    margin-bottom: 20px;
+  }
+  .input, .textarea {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid var(--accent-ink);
+    padding: 8px 0 10px;
+    color: var(--accent-ink);
+    font-family: var(--body);
+    font-size: 16px;
+    font-weight: 500;
+    outline: none;
+    resize: none;
+    border-radius: 0;
+  }
+  .input::placeholder, .textarea::placeholder {
+    color: var(--accent-ink);
+    opacity: 0.5;
+  }
+  .row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .followup {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 18px 0 22px;
+    cursor: pointer;
+  }
+  .followup input {
+    margin-top: 3px;
+    accent-color: var(--accent-ink);
+    width: 18px;
+    height: 18px;
+  }
+  .submit {
+    width: 100%;
+    background: var(--accent-ink);
+    color: var(--accent);
+    border: 0;
+    padding: 20px;
+    font-family: var(--display);
+    font-size: 28px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 1;
+    font-weight: 400;
+    transition: opacity 160ms ease;
+  }
+  .submit:hover { opacity: 0.88; }
+  .submit .arrow { font-family: var(--mono); font-size: 14px; font-weight: 500; }
+
+  .thanks { padding: 22px 0; border-top: 2px solid var(--accent-ink); }
+  .thanks h2 {
+    font-family: var(--display);
+    font-size: 56px;
+    line-height: 0.9;
+    text-transform: uppercase;
+    margin: 0;
+    font-weight: 400;
+  }
+  .thanks .small {
+    margin-top: 14px;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.8;
+  }
+
+  .audience-score {
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 2px solid var(--accent-ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .audience-score .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .audience-score .value {
+    font-family: var(--display);
+    font-size: 38px;
+    line-height: 1;
+  }
+  .audience-score .value small {
+    font-family: var(--mono);
+    font-size: 13px;
+    margin-left: 8px;
+    opacity: 0.6;
+  }
+
+  /* ─── marquee ──────────────────────────────────────────────────── */
+  .marquee {
+    background: var(--fg);
+    color: var(--bg);
+    padding: 14px 0;
+    overflow: hidden;
+    font-family: var(--display);
+    text-transform: uppercase;
+    font-size: 28px;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .marquee .track {
+    display: inline-flex;
+    gap: 28px;
+    animation: marquee 28s linear infinite;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ─── about ────────────────────────────────────────────────────── */
+  .about { padding-block: 32px 28px; }
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .about h2 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(60px, 16vw, 84px);
+    line-height: 0.85;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .about h2 .surname { color: var(--accent); display: block; }
+  .about .role {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 22px;
+  }
+  .about .portrait {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    object-position: center 18%;
+    margin-bottom: 22px;
+  }
+  .about p { margin: 0 0 14px; }
+  .about p.lead { font-size: 16px; line-height: 1.5; font-weight: 500; }
+  .about p.body { font-size: 14px; line-height: 1.55; color: var(--muted); }
+
+  .stats {
+    margin-top: 26px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 2px solid var(--fg);
+  }
+  .stats .stat {
+    background: var(--bg);
+    padding: 16px 10px;
+    text-align: center;
+  }
+  .stats .num {
+    font-family: var(--display);
+    font-size: 36px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  .stats .lbl {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* ─── talks ────────────────────────────────────────────────────── */
+  .talks-block {
+    background: var(--fg);
+    color: var(--bg);
+    padding-block: 32px 36px;
+  }
+  .talks-block .section-tag { color: rgba(255,255,255,0.6); opacity: 1; }
+  [data-theme="dark"] .talks-block .section-tag { color: rgba(0,0,0,0.6); }
+  .talks-block .talk {
+    padding: 18px 0;
+  }
+  .talks-block .talk + .talk { border-top: 2px solid currentColor; }
+  .talks-block .talk-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .talks-block .name {
+    font-family: var(--display);
+    font-size: clamp(36px, 10vw, 48px);
+    line-height: 0.95;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    font-weight: 400;
+  }
+  .talks-block .year {
+    font-family: var(--mono);
+    font-size: 14px;
+    opacity: 0.7;
+  }
+  .talks-block .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-top: 6px;
+  }
+
+  /* ─── writing ──────────────────────────────────────────────────── */
+  .writing { padding-block: 32px 28px; }
+  .article {
+    display: block;
+    padding: 16px 0;
+    color: inherit;
+    text-decoration: none;
+  }
+  .article + .article { border-top: 1px solid var(--rule); }
+  .article .title {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  a.article:hover .title { text-decoration: underline; text-underline-offset: 3px; }
+  a.article .title::after { content: " →"; opacity: 0.5; }
+  .article .meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .writing-note {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 12px;
+    font-style: italic;
+  }
+
+  /* ─── connect ──────────────────────────────────────────────────── */
+  .connect {
+    background: var(--accent);
+    color: var(--accent-ink);
+    padding-block: 32px 28px;
+  }
+  .connect .section-tag { color: var(--accent-ink); opacity: 0.7; }
+  .connect h3 {
+    font-family: var(--display);
+    font-size: clamp(48px, 14vw, 64px);
+    line-height: 0.88;
+    text-transform: uppercase;
+    margin: 0 0 22px;
+    letter-spacing: -0.01em;
+    font-weight: 400;
+  }
+  .link-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-top: 2px solid var(--accent-ink);
+    color: var(--accent-ink);
+    text-decoration: none;
+    transition: padding-inline 200ms ease;
+  }
+  .link-row:hover { padding-left: 6px; }
+  .link-row .label {
+    font-family: var(--display);
+    font-size: 26px;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    font-weight: 400;
+  }
+  .link-row .handle {
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  /* ─── footer ───────────────────────────────────────────────────── */
+  footer {
+    padding: 18px 24px 28px;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    max-width: var(--col);
+    margin: 0 auto;
+  }
+
+  /* ─── desktop polish ──────────────────────────────────────────── */
+  @media (min-width: 540px) {
+    .col, .bleed > .inner { padding-inline: 32px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee .track { animation: none; }
+  }
+
+  /* ─── focus rings ─────────────────────────────────────────────── */
+  .input:focus, .textarea:focus { border-bottom-width: 3px; }
+  .talk-btn:focus-visible,
+  .star:focus-visible,
+  .submit:focus-visible,
+  .theme-toggle:focus-visible,
+  .link-row:focus-visible {
+    outline: 2px solid var(--accent-ink);
+    outline-offset: 2px;
+  }
+  .connect .link-row:focus-visible,
+  .talks-block .talk:focus-visible { outline-color: currentColor; }
+</style>
+</head>
+<body data-theme="light">
+
+<!-- ─── Top status bar ─── -->
+<div class="topbar col">
+  <span class="live">LIVE / FEEDBACK</span>
+  <button class="theme-toggle" aria-label="Toggle theme" id="themeToggle">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" id="themeIcon">
+      <path d="M12 4V2m0 20v-2m8-8h2M2 12h2m13.66-5.66l1.41-1.41M4.93 19.07l1.41-1.41m0-11.32L4.93 4.93m14.14 14.14l-1.41-1.41M12 7a5 5 0 100 10 5 5 0 000-10z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+    </svg>
+  </button>
+</div>
+
+<!-- ─── HERO ─── -->
+<section class="bleed hero" aria-labelledby="hero-h">
+  <div class="inner">
+    <div class="eyebrow">Just heard the talk?</div>
+    <h1 id="hero-h">Tell<br />me<br />what<br />you<br />think.</h1>
+    <p class="lede">Two minutes. Honest. Anonymous if you'd like.</p>
+  </div>
+</section>
+
+<!-- ─── FORM ─── -->
+<section class="bleed form-block" aria-label="Talk feedback">
+  <div class="inner">
+    <form id="feedbackForm" novalidate>
+      <div style="padding-top: 8px; padding-bottom: 24px;">
+        <span class="field-label">CHOOSE FROM MY MOST RECENT TALKS</span>
+        <div class="talks-pick" role="radiogroup" aria-label="Talk">
+          <button type="button" class="talk-btn" data-talk="uxdx-2026" aria-pressed="true">
+            <span class="title">UXDX London</span>
+            <span class="year">29/04/26</span>
+          </button>
+          <button type="button" class="talk-btn" data-talk="evolve-2026" aria-pressed="false">
+            <span class="title">Evolve</span>
+            <span class="year">26/06/26</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Rate it</span>
+        <div class="stars" role="radiogroup" aria-label="Overall rating" id="stars">
+          <button type="button" class="star" data-value="1" aria-label="1 star"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.4 6.9.7-5.1 4.7 1.5 6.8L12 17.7 5.8 21.1l1.5-6.8L2.2 9.6l6.9-.7L12 2.5z"/></svg></button>
+          <button type="button" class="star" data-value="2" aria-label="2 stars"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.4 6.9.7-5.1 4.7 1.5 6.8L12 17.7 5.8 21.1l1.5-6.8L2.2 9.6l6.9-.7L12 2.5z"/></svg></button>
+          <button type="button" class="star" data-value="3" aria-label="3 stars"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.4 6.9.7-5.1 4.7 1.5 6.8L12 17.7 5.8 21.1l1.5-6.8L2.2 9.6l6.9-.7L12 2.5z"/></svg></button>
+          <button type="button" class="star" data-value="4" aria-label="4 stars"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.4 6.9.7-5.1 4.7 1.5 6.8L12 17.7 5.8 21.1l1.5-6.8L2.2 9.6l6.9-.7L12 2.5z"/></svg></button>
+          <button type="button" class="star" data-value="5" aria-label="5 stars"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.4 6.9.7-5.1 4.7 1.5 6.8L12 17.7 5.8 21.1l1.5-6.8L2.2 9.6l6.9-.7L12 2.5z"/></svg></button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="resonated" class="field-label">What resonated</label>
+        <textarea id="resonated" name="resonated" class="textarea" rows="2" placeholder="One thing you'll remember"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="improve" class="field-label">What I could improve</label>
+        <textarea id="improve" name="improve" class="textarea" rows="2" placeholder="Be candid"></textarea>
+      </div>
+
+      <div class="field">
+        <div class="row-2">
+          <div>
+            <label for="name" class="field-label">Name</label>
+            <input id="name" name="name" class="input" placeholder="Optional" />
+          </div>
+          <div>
+            <label for="email" class="field-label">Email</label>
+            <input id="email" name="email" type="email" class="input" placeholder="Optional" />
+          </div>
+        </div>
+      </div>
+
+      <label class="followup">
+        <input type="checkbox" id="followUp" name="followUp" />
+        <span>OK for me to follow up about this.</span>
+      </label>
+
+      <button type="submit" class="submit">
+        <span>Send</span>
+        <span class="arrow">→</span>
+      </button>
+    </form>
+
+    <!-- Audience score (toggle visibility in CONFIG.showPublicRatings) -->
+    <div class="audience-score" id="audienceScore" hidden>
+      <div class="label">Audience score</div>
+      <div class="value">
+        <span id="scoreAvg">—</span>
+        <small><span id="scoreCount">0</span> responses</small>
+      </div>
+    </div>
+
+    <!-- Submitted state -->
+    <div class="thanks" id="thanks" hidden>
+      <h2>Got it.<br />Thank you.</h2>
+      <p class="small">If you ticked follow-up, expect a note within a week.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MARQUEE ─── -->
+<div class="marquee" aria-hidden="true">
+  <div class="track">
+    <span>Product Design</span><span>★</span><span>Leadership</span><span>★</span><span>Systems</span><span>★</span><span>AI-ready teams</span><span>★</span><span>25+ years</span><span>★</span>
+    <span>Product Design</span><span>★</span><span>Leadership</span><span>★</span><span>Systems</span><span>★</span><span>AI-ready teams</span><span>★</span><span>25+ years</span><span>★</span>
+  </div>
+</div>
+
+<!-- ─── ABOUT ─── -->
+<section class="about col" aria-labelledby="about-h">
+  <div class="section-tag">/ About</div>
+  <h2 id="about-h">Gess<span class="surname">Puglielli</span></h2>
+  <div class="role">Head of Product Design · MPB</div>
+
+  <img class="portrait" data-src="assets/gess.png" alt="Portrait of Gess Puglielli" />
+
+  <p class="lead">Product design leader with 25+ years across editorial, advertising, UX and enterprise. I turn complexity into clarity — building teams, systems, and experiences people trust.</p>
+  <p class="body">I head MPB's international design team — rebuilt the platform for global relaunch, scaled the team from 1 to 8 across all disciplines, and embedded design systems, ops and discovery from scratch.</p>
+</section>
+
+<!-- ─── TALKS ─── -->
+<section class="bleed talks-block" aria-labelledby="talks-h">
+  <div class="inner">
+    <div class="section-tag">/ Talks</div>
+    <h3 id="talks-h" style="position:absolute;left:-9999px;">Talks</h3>
+    <div class="talk">
+      <div class="talk-top">
+        <div class="name">UXDX</div>
+        <div class="year">2026</div>
+      </div>
+      <div class="meta">LONDON · APRIL 29</div>
+    </div>
+    <div class="talk">
+      <div class="talk-top">
+        <div class="name">Evolve</div>
+        <div class="year">2026</div>
+      </div>
+      <div class="meta">CONFERENCE · JUNE 26</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── WRITING ─── -->
+<section class="writing col" aria-labelledby="writing-h">
+  <div class="section-tag">/ Writing</div>
+  <h3 id="writing-h" style="position:absolute;left:-9999px;">Writing</h3>
+  <a class="article" href="https://medium.com/@gessicapuglielli/nlx-is-not-a-feature-its-a-new-ux-framework-69a0eaa4eb67" target="_blank" rel="noreferrer noopener">
+    <div class="title">NLX is not a feature. It’s a new UX framework.</div>
+    <div class="meta">Medium · Feb 2026</div>
+  </a>
+  <a class="article" href="https://medium.com/@gessicapuglielli/design-leadership-in-the-age-of-fast-ux-and-ai-8812c2906c10" target="_blank" rel="noreferrer noopener">
+    <div class="title">Design leadership in the age of fast UX and AI</div>
+    <div class="meta">Medium · Jan 2026</div>
+  </a>
+  <a class="article" href="https://medium.com/@gessicapuglielli/are-we-designing-ourselves-into-a-corner-76cde1eea63d" target="_blank" rel="noreferrer noopener">
+    <div class="title">Are we designing ourselves into a corner?</div>
+    <div class="meta">Medium · Nov 2025</div>
+  </a>
+  <a class="article" href="https://medium.com/@gessicapuglielli/the-art-of-the-possible-8641dde309f3" target="_blank" rel="noreferrer noopener">
+    <div class="title">The art of the possible</div>
+    <div class="meta">Medium · Nov 2025</div>
+  </a>
+  <a class="article" href="https://medium.com/@gessicapuglielli/product-design-isnt-ux-design-it-s-business-design-too-46fe795adf0d" target="_blank" rel="noreferrer noopener">
+    <div class="title">Product design isn’t UX design — it’s business design too</div>
+    <div class="meta">Medium · Sep 2025</div>
+  </a>
+  <a class="article" href="https://medium.com/mpb-tech/the-future-of-e-commerce-ux-in-the-age-of-agentic-ai-a-strategic-design-perspective-1410d90ca14a" target="_blank" rel="noreferrer noopener">
+    <div class="title">The future of e-commerce UX in the age of Agentic AI</div>
+    <div class="meta">MPB Tech · Jul 2025</div>
+  </a>
+  <a class="article" href="https://medium.com/@gessicapuglielli/design-is-not-dead-youre-just-not-looking-closely-enough-831e29debcbd" target="_blank" rel="noreferrer noopener">
+    <div class="title">Design is not dead. You’re just not looking closely enough.</div>
+    <div class="meta">Medium · May 2025</div>
+  </a>
+  <a class="article" href="https://medium.com/@gessicapuglielli/psychological-safety-what-it-is-what-it-isnt-and-the-tools-i-use-to-foster-it-in-my-team-1e10b63b8215" target="_blank" rel="noreferrer noopener">
+    <div class="title">Psychological safety: what it is, what it isn’t, and the tools I use to foster it</div>
+    <div class="meta">Medium · Mar 2025</div>
+  </a>
+</section>
+
+<!-- ─── CONNECT ─── -->
+<section class="bleed connect" aria-labelledby="connect-h">
+  <div class="inner">
+    <div class="section-tag">/ Connect</div>
+    <h3 id="connect-h">Three<br />homes,<br />one me.</h3>
+    <a class="link-row" href="https://www.linkedin.com/in/gessicapuglielli/" target="_blank" rel="noreferrer noopener">
+      <span class="label">LinkedIn</span>
+      <span class="handle">@gessicapuglielli →</span>
+    </a>
+    <a class="link-row" href="https://gess.design/" target="_blank" rel="noreferrer noopener">
+      <span class="label">Design site</span>
+      <span class="handle">gess.design →</span>
+    </a>
+    <a class="link-row" href="https://gess.photos/" target="_blank" rel="noreferrer noopener">
+      <span class="label">Photography</span>
+      <span class="handle">gess.photos →</span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div>© 2026 Gess Puglielli</div>
+  <div>End.</div>
+</footer>
+
+<script>
+/* Resolve relative asset URLs while preserving any preview-host query token. */
+document.querySelectorAll("[data-src]").forEach((el) => {
+  el.src = el.getAttribute("data-src") + location.search;
+});
+
+/* ─────────────────────────────────────────────────────────────────
+   Config — flip these without touching the rest of the page.
+   To wire feedback to a real backend later, replace storeFeedback()
+   with a fetch() to Formspree / Tally / your endpoint.
+   ───────────────────────────────────────────────────────────────── */
+const CONFIG = {
+  defaultTalk: "uxdx-2026",
+  showPublicRatings: false, // flip true to display the audience score
+  // Paste your Google Apps Script web-app URL here (see setup notes at the
+  // bottom of this file). Leave as "" to fall back to localStorage only.
+  endpoint: "",
+};
+
+const FB_KEY = "gess.feedback.v1";
+
+const readFeedback = () => {
+  try { return JSON.parse(localStorage.getItem(FB_KEY) || "[]"); }
+  catch { return []; }
+};
+const storeFeedback = (entry) => {
+  const list = readFeedback();
+  list.unshift({ ...entry, ts: Date.now(), id: Math.random().toString(36).slice(2, 9) });
+  try { localStorage.setItem(FB_KEY, JSON.stringify(list)); } catch {}
+};
+
+/* ─── theme toggle ─────────────────────────────────────────────── */
+const THEME_KEY = "gess.theme";
+const initialTheme = localStorage.getItem(THEME_KEY) || "light";
+document.body.setAttribute("data-theme", initialTheme);
+
+document.getElementById("themeToggle").addEventListener("click", () => {
+  const cur = document.body.getAttribute("data-theme");
+  const next = cur === "dark" ? "light" : "dark";
+  document.body.setAttribute("data-theme", next);
+  try { localStorage.setItem(THEME_KEY, next); } catch {}
+});
+
+/* ─── talk picker ──────────────────────────────────────────────── */
+let selectedTalk = CONFIG.defaultTalk;
+const talkButtons = document.querySelectorAll(".talk-btn");
+talkButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    selectedTalk = btn.getAttribute("data-talk");
+    talkButtons.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+    renderScore();
+  });
+});
+
+/* ─── star rating ──────────────────────────────────────────────── */
+let rating = 0;
+const stars = document.querySelectorAll(".star");
+const paintStars = (n) => {
+  stars.forEach((s) => {
+    const v = Number(s.getAttribute("data-value"));
+    s.setAttribute("data-on", String(v <= n));
+  });
+};
+stars.forEach((s) => {
+  const v = Number(s.getAttribute("data-value"));
+  s.addEventListener("click", () => { rating = v; paintStars(rating); });
+  s.addEventListener("mouseenter", () => paintStars(v));
+  s.addEventListener("mouseleave", () => paintStars(rating));
+});
+
+/* ─── form submit ──────────────────────────────────────────────── */
+document.getElementById("feedbackForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const entry = {
+    talkId: selectedTalk,
+    rating,
+    resonated: (fd.get("resonated") || "").toString().trim(),
+    improve: (fd.get("improve") || "").toString().trim(),
+    name: (fd.get("name") || "").toString().trim(),
+    email: (fd.get("email") || "").toString().trim(),
+    followUp: !!fd.get("followUp"),
+  };
+  if (!entry.rating && !entry.resonated && !entry.improve) return;
+  storeFeedback(entry); // local cache fallback
+  if (CONFIG.endpoint) {
+    // text/plain avoids a CORS preflight to Apps Script.
+    fetch(CONFIG.endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(entry),
+    }).catch((err) => console.warn("Feedback POST failed:", err));
+  }
+  e.target.hidden = true;
+  document.getElementById("thanks").hidden = false;
+  renderScore();
+});
+
+/* ─── audience score ───────────────────────────────────────────── */
+function renderScore() {
+  const box = document.getElementById("audienceScore");
+  if (!CONFIG.showPublicRatings) { box.hidden = true; return; }
+  const all = readFeedback().filter((f) => f.talkId === selectedTalk);
+  const rated = all.filter((f) => f.rating > 0);
+  if (!rated.length) { box.hidden = true; return; }
+  const avg = rated.reduce((s, f) => s + f.rating, 0) / rated.length;
+  document.getElementById("scoreAvg").textContent = avg.toFixed(1) + "/5";
+  document.getElementById("scoreCount").textContent = all.length;
+  box.hidden = false;
+}
+renderScore();
+</script>
+
+<!--
+───────────────────────────────────────────────────────────────────
+GOOGLE APPS SCRIPT SETUP — one-time, ~5 min
+
+1. Create a Google Sheet. First row of "Sheet1":
+   timestamp | talkId | rating | resonated | improve | name | email | followUp
+
+2. Extensions → Apps Script. Replace Code.gs with:
+
+   const EMAIL_TO = "you@example.com";   // ← your email
+   const SHEET_ID = "PASTE_SHEET_ID";    // ← from the sheet URL
+
+   function doPost(e) {
+     const d = JSON.parse(e.postData.contents);
+     const ts = new Date();
+     SpreadsheetApp.openById(SHEET_ID).getSheets()[0].appendRow([
+       ts, d.talkId, d.rating, d.resonated, d.improve,
+       d.name, d.email, d.followUp,
+     ]);
+     MailApp.sendEmail({
+       to: EMAIL_TO,
+       subject: `New feedback · ${d.talkId} · ${d.rating || "—"}/5`,
+       body: [
+         `Talk: ${d.talkId}`,
+         `Rating: ${d.rating || "—"}/5`,
+         `Resonated: ${d.resonated || "—"}`,
+         `Improve: ${d.improve || "—"}`,
+         `Name: ${d.name || "—"}`,
+         `Email: ${d.email || "—"}`,
+         `Follow-up requested: ${d.followUp ? "yes" : "no"}`,
+       ].join("\n"),
+     });
+     return ContentService.createTextOutput("ok");
+   }
+
+3. Deploy → New deployment → Web app
+   - Execute as: Me
+   - Who has access: Anyone
+   Copy the deployment URL.
+
+4. Paste that URL into CONFIG.endpoint above.
+
+Notes:
+- MailApp has a free 100 emails/day quota — plenty for talk feedback.
+- Each redeploy gives a new URL; "Manage deployments → edit" keeps the
+  same URL when you update the script.
+───────────────────────────────────────────────────────────────────
+-->
+
+</body>
+</html>

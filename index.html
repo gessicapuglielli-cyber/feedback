@@ -759,10 +759,8 @@
    ───────────────────────────────────────────────────────────────── */
 const CONFIG = {
   defaultTalk: "uxdx-2026",
-  showPublicRatings: false, // flip true to display the audience score
-  // Paste your Google Apps Script web-app URL here (see setup notes at the
-  // bottom of this file). Leave as "" to fall back to localStorage only.
-  endpoint: "",
+  showPublicRatings: false,
+  email: "gessica.puglielli@me.com",
 };
 
 const FB_KEY = "gess.feedback.v1";
@@ -831,14 +829,20 @@ document.getElementById("feedbackForm").addEventListener("submit", (e) => {
   };
   if (!entry.rating && !entry.resonated && !entry.improve) return;
   storeFeedback(entry); // local cache fallback
-  if (CONFIG.endpoint) {
-    // text/plain avoids a CORS preflight to Apps Script.
-    fetch(CONFIG.endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(entry),
-    }).catch((err) => console.warn("Feedback POST failed:", err));
-  }
+
+  const talkLabel = document.querySelector(`.talk-btn[data-talk="${entry.talkId}"] .title`)?.textContent || entry.talkId;
+  const stars = entry.rating ? "★".repeat(entry.rating) + "☆".repeat(5 - entry.rating) : "—";
+  const body = [
+    `Talk: ${talkLabel}`,
+    `Rating: ${stars}`,
+    `What resonated: ${entry.resonated || "—"}`,
+    `What could improve: ${entry.improve || "—"}`,
+    `Name: ${entry.name || "—"}`,
+    `Follow-up OK: ${entry.followUp ? "yes" : "no"}`,
+  ].join("\n");
+  const subject = `Talk feedback · ${talkLabel} · ${stars}`;
+  window.location.href = `mailto:${CONFIG.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
   e.target.hidden = true;
   document.getElementById("thanks").hidden = false;
   renderScore();
